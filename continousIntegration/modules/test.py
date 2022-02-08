@@ -15,15 +15,22 @@ PYTHON_VER = '3'
 def test(PATH):
 
     ''' Checks for a top-level folder named 'tests' and runs all files within it.
+
         Parameters
         ----------
         PATH: The path to the project.
+
         Returns
         -------
         STATUS:
             ERROR: At least one test failed.
             SUCCESS: All tests passed
-        '''
+
+        See Also
+        --------
+        tests.test : Functions that tests this test function
+        """
+    '''
 
     # Create a list to store all file paths.
     pythonFiles = []
@@ -35,7 +42,6 @@ def test(PATH):
             if file.endswith('.py'): # If the file is of type .py.
                 pythonFiles.append(os.path.join(root, file)) # Add it to the list as a complete file path.
 
-    print("PERFORMS TESTS")
 
     for file in pythonFiles:
         # Runs the test file
