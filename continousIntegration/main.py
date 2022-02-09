@@ -5,6 +5,7 @@ import os
 import sys
 
 from modules.compilation import compile
+from modules.notification import notify
 from modules.test import test
 
 ##### SETTINGS #####
@@ -23,7 +24,15 @@ app = Flask(__name__) # Variable for flask server application, to be called upon
 @app.route('/', methods=['POST']) # Triggered by URL localhost:5000/
 def handler_Push():
 
+    TOKEN = sys.stdin.readline()
     data = request.json # Request the data from the event.
+
+    message, code = notify(data, "pending", TOKEN)
+    
+    if code > 0 or code < 0: # Error occured!
+        # Set github status.
+        notify(data, "failure", TOKEN)
+        return message + ' ' + str(code)
 
     print("Received PUSH event from webhook!") # Debug print.
 
@@ -43,6 +52,7 @@ def handler_Push():
 
     if code > 0 or code < 0: # Error occured!
         # Set github status.
+        notify(data, "failure", TOKEN)
         return message + ' ' + str(code)
 
     # Run module that tests.
@@ -51,8 +61,10 @@ def handler_Push():
 
     if code > 0 or code < 0: # Error occured!
         # Set github status.
+        notify(data, "failure", TOKEN)
         return message + ' ' + str(code)
 
+    notify(data, "success", TOKEN)
 
     return "OK " + message + ' ' + str(code)
 

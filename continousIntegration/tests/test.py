@@ -3,7 +3,8 @@ import sys
 import os
 sys.path.append('../')
 from modules.test import test 
-from modules.compilation import compile 
+from modules.compilation import compile
+from modules.notification import notify
 
 
 class Tests(unittest.TestCase):
@@ -16,6 +17,7 @@ class Tests(unittest.TestCase):
         Test 4: Tests if it returns SUCCESS if there are not tests in the directory
         Test 5: Tests if it returns SUCCESS when all the tests in the directory can compile
         Test 6: Tests if it returns ERROR if at least one of the files in the directory cannot compile
+        Test 7: Tests if it returns ERROR if no valid authentication token is given
         
         See Also
         --------
@@ -52,6 +54,19 @@ class Tests(unittest.TestCase):
     def test_fails_com(self):
         status , code = compile('./test6/tests')
         self.assertFalse(code != 0)
+
+    # Test 7 
+    def test_fails_notify(self):
+        data = {
+            "after": "f04a518bc7c57bff8fad020262f9fc16c7ac35f3", 
+            "repository": {
+                "full_name": "soderqw/DD2480_Lab2-CI",
+            }
+        }
+        status , code = notify(data, "success", 0)
+        self.assertTrue(code != 0)
+
+
          
 if __name__ == '__main__':
     unittest.main()
