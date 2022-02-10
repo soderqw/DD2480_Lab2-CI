@@ -27,32 +27,32 @@ class Tests(unittest.TestCase):
     
     # Test 1
     def test_empty(self):
-        status , code = test('./tests/test1')
+        status , code = test('../unittests/test1')
         self.assertTrue(code == 0)
 
     # Test 2
     def test_successful(self):
-        status , code = test('./tests/test2')
+        status , code = test('../unittests/test2')
         self.assertTrue(code == 0)
 
     # Test 3
     def test_fails(self):
-        status , code = test('./tests/test3')
+        status , code = test('../unittests/test3')
         self.assertFalse(code == 0)
 
     # Test 4
     def test_empty_com(self):
-        status , code = compile('./tests/test4')
+        status , code = compile('../unittests/test4')
         self.assertTrue(code == 0)
     
     # Test 5   
     def test_successful_com(self):
-        status , code = compile('./tests/test5')
+        status , code = compile('../unittests/test5')
         self.assertTrue(code == 0)
     
     # Test 6
     def test_fails_com(self):
-        status , code = compile('./tests/test6')
+        status , code = compile('../unittests/test6')
         self.assertFalse(code == 0)
 
     # Test 7 

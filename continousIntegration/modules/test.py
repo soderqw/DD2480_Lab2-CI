@@ -36,7 +36,7 @@ def test(PATH):
     pythonFiles = []
 
     # Fetch all python files from the tests folder.
-    for root, _, files in os.walk(f'{PATH}/modules/tests'): # Traverse directory storing relevant information, from PATH path.
+    for root, _, files in os.walk(f'{PATH}/tests'): # Traverse directory storing relevant information, from PATH path.
         for file in files: # Go through all files in current directory.
             if file.endswith('.py'): # If the file is of type .py.
                 pythonFiles.append(os.path.join(root, file)) # Add it to the list as a complete file path.
