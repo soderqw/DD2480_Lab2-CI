@@ -1,10 +1,9 @@
 import unittest
 import sys
 import os
-sys.path.append('../')
-from modules.test import test 
-from modules.compilation import compile
-from modules.notification import notify
+sys.path.append('./')
+import test
+from compilation import compile
 
 
 class Tests(unittest.TestCase):
@@ -27,17 +26,17 @@ class Tests(unittest.TestCase):
     
     # Test 1
     def test_empty(self):
-        status , code = test('./test1')
+        status , code = test('./tests/test1')
         self.assertTrue(code == 0)
 
     # Test 2
     def test_successful(self):
-        status , code = test('./test2')
+        status , code = test('./tests/test2')
         self.assertTrue(code == 0)
 
     # Test 3
     def test_fails(self):
-        status , code = test('./test3')
+        status , code = test('./tests/test3')
         self.assertFalse(code != 0)
     
     # Test 4

@@ -6,9 +6,9 @@ __pycache__/
 ngrok
 
 # MacOS generated files.
-*.DS_store
-.DS_store
-.DS_store?
+*.DS_Store
+.DS_Store
+.DS_Store?
 
 # C extensions
 *.so
