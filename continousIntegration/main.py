@@ -48,11 +48,14 @@ def handler_Push():
     print("Received PUSH event from webhook!") # Debug print.
 
     # Step 1: Clone the repository.
-    repo = data["repository"]["clone_url"] # Fetches the clone URL from the payload.
+    repo = data["repository"]["clone_url"]  # Fetches the clone URL from the payload.
     name = data["repository"]["name"]
+    sender = data["sender"]["login"]
+    sha = data["pull_requests"]["sha"]
     branch = data["ref"].split('/')[2]
 
-    if os.path.isdir(name):
+
+if os.path.isdir(name):
         # Remove the cloned repo.
         shutil.rmtree(name)
 
@@ -79,6 +82,7 @@ def handler_Push():
         notify(data, "failure", TOKEN)
         return message + ' ' + str(code)
 
+    logger(PATH_REPO, name, message, sender, sha)
     notify(data, "success", TOKEN)
 
     return "OK " + message + ' ' + str(code)
