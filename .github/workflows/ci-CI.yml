@@ -45,4 +45,4 @@ jobs: # Group together jobs.
 
     - name: Run unit tests # Runs the project groups written unit test file.
       run: |
-        python3 ./continousIntegration/tests/test.py
+        python3 ./continousIntegration/module/unittest.py
