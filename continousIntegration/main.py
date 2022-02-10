@@ -1,8 +1,10 @@
 ##### IMPORTS #####
 
+from tkinter import W
 from flask import Flask, request, json
 import os
 import sys
+import shutil
 
 from modules.compilation import compile
 from modules.notification import notify
@@ -24,7 +26,16 @@ app = Flask(__name__) # Variable for flask server application, to be called upon
 @app.route('/', methods=['POST']) # Triggered by URL localhost:5000/
 def handler_Push():
 
-    TOKEN = sys.stdin.readline()
+    TOKEN = '';
+
+    if not os.path.isfile('./.TOKEN.txt'):
+        TOKEN = sys.stdin.readline()
+        with open('./.TOKEN.txt', 'w') as f:
+            f.write(TOKEN)
+    else:
+        with open('./.TOKEN.txt', 'r') as f:
+            TOKEN = f.read()
+
     data = request.json # Request the data from the event.
 
     message, code = notify(data, "pending", TOKEN)
@@ -40,6 +51,10 @@ def handler_Push():
     repo = data["repository"]["clone_url"] # Fetches the clone URL from the payload.
     name = data["repository"]["name"]
     branch = data["ref"].split('/')[2]
+
+    if os.path.isdir(name):
+        # Remove the cloned repo.
+        shutil.rmtree(name)
 
     os.chdir(PATH_REPO)
     os.system("git clone " + '-b ' + branch + ' ' + repo) # Runs command to clone the repository.

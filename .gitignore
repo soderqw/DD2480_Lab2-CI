@@ -10,6 +10,9 @@ ngrok
 .DS_Store
 .DS_Store?
 
+# TOKEN file
+.TOKEN.txt
+
 # C extensions
 *.so
 
