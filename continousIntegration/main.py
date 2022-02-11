@@ -12,9 +12,10 @@ from modules.test import test
 
 ##### SETTINGS #####
 
-STATUS_DEBUG = True
+STATUS_DEBUG = False
 HOST = "127.0.0.1"
 PORT = 8080
+RELOAD = False
 
 PATH_REPO = str(os.getcwd()) # Folder within CWD to run the code.
 
@@ -86,5 +87,5 @@ def handler_Push():
 
 # Start the Flask web server.
 if __name__ == '__main__':
-    app.run(debug=STATUS_DEBUG, host=HOST, port=PORT)
+    app.run(debug=STATUS_DEBUG, host=HOST, port=PORT, use_reloader=RELOAD)
     
