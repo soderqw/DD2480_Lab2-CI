@@ -44,6 +44,31 @@ The server runs a check whenever a push to the repository has been made.
 Step 3: Verifying Commit Status
 GitHub displays the build status from the Continuous Integration tool using the GitHub commit status.
 
+# Implementation
+
+Compilation module
+```bash
+The compilation module grabs the clone URL and branch from the JSON payload then cloning the repository locally. It then looks for any file within the cloned repository with the relevant file extension '.py'. It then completes a static syntax check of any occurences of such files, returning an error code to the main server accordingly.
+
+Unit tests have been implemented testing the functionality of the component. Files were added which compile and do not compile and the compilation component was then run locally on those files to evaluate the performance. If it could detect errors within a script.
+```
+
+Test module
+```bash
+The test module looks within the previously cloned repository for a /tests folder at a specified location. It then, similarly to the compilation module, look for any file with the extension '.py' and runs them. An error code is returned accordingly to the main server.
+
+Unit tests have been implemented testing the functionality of the component. Files were added which compile and do not compile and the compilation component was then run locally on those files to evaluate the performance. If it could detect errors within a script.
+```
+
+Notification module
+```bash
+The notification module takes an error code, corresponding to success or any error. Using a token which is provided to the server it sends a POST request using the GitHub API for a commit status change of the status corresponding to the error code.
+
+A pending status is sent before any other component is run in order to signify that a test is being run.
+
+Unit testing for this has been run by providing different parameters to the component. Namely the TOKEN parameter as this is the one parameter that the program uses. An invalid input and a correct token was tested.
+```
+
 # Statement of Contribution
 
 During this project, an effort was put towards distributing the workload equally amongst all members of the team. While some of the specified assignments were largely attributed to one person, a team effort was put into the group assignment, thus a plethora of the features were worked on as a group.
