@@ -45,7 +45,6 @@ def test(PATH):
     for file in pythonFiles:
         # Runs the test file
         out = os.system(f'python{PYTHON_VER} {file}')
-        print(out)
 
         # An error code of 0 corresponds to success.
         if out > 0:
