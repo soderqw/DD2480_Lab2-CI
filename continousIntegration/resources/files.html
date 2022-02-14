@@ -1,0 +1,12 @@
+
+<ul>
+    {% for file in files %}
+    <li>
+        <a href="{{ (request.path + '/' if request.path != '/' else '') + file }}">
+            {{ (request.path + '/' if request.path != '/' else '') + file }}
+        </a>
+        <p><iframe src=" {{ (request.path + '/' if request.path != '/' else '') + file }}" frameborder="0" height="200"
+            width="95%"></iframe></p>
+    </li>
+    {% endfor %}
+</ul>

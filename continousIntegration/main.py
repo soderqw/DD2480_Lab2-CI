@@ -1,7 +1,7 @@
 ##### IMPORTS #####
 
 from tkinter import W
-from flask import Flask, request, json
+from flask import Flask, request, json, abort, render_template, send_file
 import os
 import sys
 import shutil
@@ -21,12 +21,29 @@ PATH_REPO = str(os.getcwd()) # Folder within CWD to run the code.
 
 ##### PROGRAM #####
 
-app = Flask(__name__) # Variable for flask server application, to be called upon.
+app = Flask(__name__, template_folder="resources") # Variable for flask server application, to be called upon.
 
-@app.route(f"/commit_logs", methods=['GET', 'POST'])
-def display():
-   permitted_directory="../../commit_logs"
-   return send_from_directory(directory=permitted_directory, filename=filename,as_attachment=True,cache_timeout=0)
+@app.route('/<path:req_path>')
+def dir_listing(req_path):
+    BASE_DIR = '../'
+
+    # Joining the base and the requested path
+    abs_path = os.path.join(BASE_DIR, req_path)
+    # Return 404 if path doesn't exist
+    if not os.path.exists(abs_path):
+        return abort(404)
+
+    # Check if path is a file and serve
+    if os.path.isfile(abs_path):
+        with open(abs_path, "r") as f:
+            return render_template("file.html", file=f.read())
+
+    else:
+        # Show directory contents
+        files = os.listdir(abs_path)
+        if '.DS_Store' in files:
+            files.remove('.DS_Store')
+        return render_template('files.html', files=files)
 
 
 
