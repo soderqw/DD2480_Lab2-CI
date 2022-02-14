@@ -23,6 +23,13 @@ PATH_REPO = str(os.getcwd()) # Folder within CWD to run the code.
 
 app = Flask(__name__) # Variable for flask server application, to be called upon.
 
+@app.route(f"/commit_logs", methods=['GET', 'POST'])
+def display():
+   permitted_directory="../../commit_logs"
+   return send_from_directory(directory=permitted_directory, filename=filename,as_attachment=True,cache_timeout=0)
+
+
+
 # Create an endpoint which receives requests from the GitHub API.
 @app.route('/', methods=['POST']) # Triggered by URL localhost:5000/
 def handler_Push():
@@ -57,37 +64,39 @@ def handler_Push():
     commit_url = data["repository"]["git_commits_url"]
 
 
-if os.path.isdir(name):
-        # Remove the cloned repo.
+    if os.path.isdir(name):
+            # Remove the cloned repo.
         shutil.rmtree(name)
 
-    os.chdir(PATH_REPO)
-    os.system("git clone " + '-b ' + branch + ' ' + repo) # Runs command to clone the repository.
+        os.chdir(PATH_REPO)
+        os.system("git clone " + '-b ' + branch + ' ' + repo) # Runs command to clone the repository.
 
-    # Run module that compiles.
+        # Run module that compiles.
 
-    print(str(os.getcwd()) + '/' + name)
+        print(str(os.getcwd()) + '/' + name)
 
-    message, code = compile(PATH_REPO + '/' + name)
+        message, code = compile(PATH_REPO + '/' + name)
 
-    if code > 0 or code < 0: # Error occured!
-        # Set github status.
-        notify(data, "failure", TOKEN)
-        return message + ' ' + str(code)
+        if code > 0 or code < 0: # Error occured!
+            # Set github status.
+            notify(data, "failure", TOKEN)
+            logger(PATH_REPO, name, message, sender, sha, commit_url)
+            return message + ' ' + str(code)
 
-    # Run module that tests.
+        # Run module that tests.
 
-    message, code = test(PATH_REPO + '/' + name)
+        message, code = test(PATH_REPO + '/' + name)
 
-    if code > 0 or code < 0: # Error occured!
-        # Set github status.
-        notify(data, "failure", TOKEN)
-        return message + ' ' + str(code)
+        if code > 0 or code < 0: # Error occured!
+            # Set github status.
+            notify(data, "failure", TOKEN)
+            logger(PATH_REPO, name, message, sender, sha, commit_url)
+            return message + ' ' + str(code)
 
-    logger(PATH_REPO, name, message, sender, sha, commit_url)
-    notify(data, "success", TOKEN)
+        logger(PATH_REPO, name, message, sender, sha, commit_url)
+        notify(data, "success", TOKEN)
 
-    return "OK " + message + ' ' + str(code)
+        return "OK " + message + ' ' + str(code)
 
 
 # Start the Flask web server.

@@ -1,6 +1,8 @@
 from datetime import datetime
 import os
 
+
+
 def logger(PATH_REPO, name, message, sender, sha, commit_url):
     ''' Logs the activity when a webhook is activated.
                    Parameters
@@ -19,7 +21,7 @@ def logger(PATH_REPO, name, message, sender, sha, commit_url):
 
 
     #Checks if the file exist
-    p = f"../../../logging{sha}.txt"
+    p = f"../../commit_logs/logs{sha}.txt"
     file_exists = os.path.exists(p) #will hold a True or False value
     print(file_exists)
     #Creates the file if it does not exist
@@ -35,8 +37,20 @@ def logger(PATH_REPO, name, message, sender, sha, commit_url):
     file1.write("Push event from: " + sender + "\n" + "Path: " + path + "\n" + "Compiled at:" + str(time) + "\n" + "Status: " + message + "\n" + "Sha: " + sha + "\n" +commit_url + "\n\n")
     file1.close()
 
+    p = f"../../commit_logs/logs.txt"
+    file_exists = os.path.exists(p)  # will hold a True or False value
+    print(file_exists)
+    # Creates the file if it does not exist
+    if (file_exists == False):
+        f = open(p, "w")
+
+    file1 = open(p, "a")  # append mode
+    file1.write("Push event from: " + sender + "\n" + "Path: " + path + "\n" + "Compiled at:" + str(
+        time) + "\n" + "Status: " + message + "\n" + "Sha: " + sha + "\n" + commit_url + "\n\n")
+    file1.close()
+
 def main():
-    logger("Musse/Tim/wille", "ISSUE#33", "FAIL", "MUSSE", "dsadadasdads", "HTTP://github.bajs.com")
+    logger("Musse/Tim/wille", "ISSUE#33", "FAIL", "MUSSE", "MDSADA", "HTTP://github.bajs.com")
 
 if __name__ == "__main__":
     main()
