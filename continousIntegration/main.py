@@ -54,6 +54,7 @@ def handler_Push():
     sender = data["sender"]["login"]
     sha = data["pull_requests"]["sha"]
     branch = data["ref"].split('/')[2]
+    commit_url = data["repository"]["git_commits_url"]
 
 
 if os.path.isdir(name):
@@ -83,7 +84,7 @@ if os.path.isdir(name):
         notify(data, "failure", TOKEN)
         return message + ' ' + str(code)
 
-    logger(PATH_REPO, name, message, sender, sha)
+    logger(PATH_REPO, name, message, sender, sha, commit_url)
     notify(data, "success", TOKEN)
 
     return "OK " + message + ' ' + str(code)

@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-def logger(PATH_REPO, name, message, sender, sha):
+def logger(PATH_REPO, name, message, sender, sha, commit_url):
     ''' Logs the activity when a webhook is activated.
                    Parameters
                    ----------
@@ -32,11 +32,11 @@ def logger(PATH_REPO, name, message, sender, sha):
     path = PATH_REPO + '/' + name
     print("RUNNING")
     file1 = open(p, "w")  #append mode
-    file1.write("Push event from: " + sender + "\n" + "Path: " + path + "\n" + "Compiled at:" + str(time) + "\n" + "Status: " + message + "\n" + "Sha: " + sha + "\n\n")
+    file1.write("Push event from: " + sender + "\n" + "Path: " + path + "\n" + "Compiled at:" + str(time) + "\n" + "Status: " + message + "\n" + "Sha: " + sha + "\n" +commit_url + "\n\n")
     file1.close()
 
 def main():
-    logger("Musse/Tim/wille", "ISSUE#33", "FAIL", "MUSSE", "dasadssads")
+    logger("Musse/Tim/wille", "ISSUE#33", "FAIL", "MUSSE", "dsadadasdads", "HTTP://github.bajs.com")
 
 if __name__ == "__main__":
     main()
