@@ -54,12 +54,12 @@ def handler_Push():
 
     TOKEN = '';
 
-    if not os.path.isfile('.TOKEN.txt'):
+    if not os.path.isfile('./.TOKEN.txt'):
         TOKEN = sys.stdin.readline()
-        with open('.TOKEN.txt', 'w') as f:
+        with open('./.TOKEN.txt', 'w') as f:
             f.write(TOKEN)
     else:
-        with open('.TOKEN.txt', 'r') as f:
+        with open('./.TOKEN.txt', 'r') as f:
             TOKEN = f.read()
             print(TOKEN)
 
@@ -111,7 +111,6 @@ def handler_Push():
         logger(PATH_REPO, name, message, sender, sha, commit_url)
         return message + ' ' + str(code)
 
-    print("test")
     logger(PATH_REPO, name, message, sender, sha, commit_url)
     notify(data, "success", TOKEN)
 
