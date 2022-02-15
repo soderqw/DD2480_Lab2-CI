@@ -1,8 +1,6 @@
 from datetime import datetime
 import os
 
-
-
 def logger(PATH_REPO, name, message, sender, sha, commit_url):
     ''' Logs the activity when a webhook is activated.
                    Parameters
@@ -19,16 +17,14 @@ def logger(PATH_REPO, name, message, sender, sha, commit_url):
                    main : Functions that calls this logger function
            '''
 
-
+    
     #Checks if the file exist
-    p = f"../../commit_logs/logs{sha}.txt"
+    p = f"{os.getcwd()}/commit_logs/logs{sha}.txt"
     file_exists = os.path.exists(p) #will hold a True or False value
-    print(file_exists)
     #Creates the file if it does not exist
     if (file_exists == False):
         f = open(p, "w")
 
-    print(file_exists)
     # Append-adds at last of the file
     time = datetime.now()
     path = PATH_REPO + '/' + name
@@ -36,9 +32,3 @@ def logger(PATH_REPO, name, message, sender, sha, commit_url):
     file1 = open(p, "w")  #append mode
     file1.write("Push event from: " + sender + "\n" + "Path: " + path + "\n" + "Compiled at:" + str(time) + "\n" + "Status: " + message + "\n" + "Sha: " + sha + "\n" +commit_url + "\n\n")
     file1.close()
-
-def main():
-    logger("Musse/Tim/wille", "ISSUE#33", "FAIL", "MUSSE", "dsaddaadsasd", "HTTP://github.bajs.com")
-
-if __name__ == "__main__":
-    main()

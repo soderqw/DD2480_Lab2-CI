@@ -9,6 +9,7 @@ import shutil
 from modules.compilation import compile
 from modules.notification import notify
 from modules.test import test
+from modules.logger import logger
 
 ##### SETTINGS #####
 
@@ -25,7 +26,7 @@ app = Flask(__name__, template_folder="resources") # Variable for flask server a
 
 @app.route('/<path:req_path>')
 def dir_listing(req_path):
-    BASE_DIR = '../'
+    BASE_DIR = os.getcwd()
 
     # Joining the base and the requested path
     abs_path = os.path.join(BASE_DIR, req_path)
@@ -53,13 +54,14 @@ def handler_Push():
 
     TOKEN = '';
 
-    if not os.path.isfile('./.TOKEN.txt'):
+    if not os.path.isfile('.TOKEN.txt'):
         TOKEN = sys.stdin.readline()
-        with open('./.TOKEN.txt', 'w') as f:
+        with open('.TOKEN.txt', 'w') as f:
             f.write(TOKEN)
     else:
-        with open('./.TOKEN.txt', 'r') as f:
+        with open('.TOKEN.txt', 'r') as f:
             TOKEN = f.read()
+            print(TOKEN)
 
     data = request.json # Request the data from the event.
 
@@ -76,44 +78,44 @@ def handler_Push():
     repo = data["repository"]["clone_url"]  # Fetches the clone URL from the payload.
     name = data["repository"]["name"]
     sender = data["sender"]["login"]
-    sha = data["pull_requests"]["sha"]
+    sha = data["after"]
     branch = data["ref"].split('/')[2]
-    commit_url = data["repository"]["git_commits_url"]
-
+    commit_url = data["commits"][0]["url"]
 
     if os.path.isdir(name):
             # Remove the cloned repo.
         shutil.rmtree(name)
 
-        os.chdir(PATH_REPO)
-        os.system("git clone " + '-b ' + branch + ' ' + repo) # Runs command to clone the repository.
+    os.chdir(PATH_REPO)
+    os.system("git clone " + '-b ' + branch + ' ' + repo) # Runs command to clone the repository.
 
-        # Run module that compiles.
+    # Run module that compiles.
 
-        print(str(os.getcwd()) + '/' + name)
+    print(str(os.getcwd()) + '/' + name)
 
-        message, code = compile(PATH_REPO + '/' + name)
+    message, code = compile(PATH_REPO + '/' + name)
 
-        if code > 0 or code < 0: # Error occured!
-            # Set github status.
-            notify(data, "failure", TOKEN)
-            logger(PATH_REPO, name, message, sender, sha, commit_url)
-            return message + ' ' + str(code)
-
-        # Run module that tests.
-
-        message, code = test(PATH_REPO + '/' + name)
-
-        if code > 0 or code < 0: # Error occured!
-            # Set github status.
-            notify(data, "failure", TOKEN)
-            logger(PATH_REPO, name, message, sender, sha, commit_url)
-            return message + ' ' + str(code)
-
+    if code > 0 or code < 0: # Error occured!
+        # Set github status.
+        notify(data, "failure", TOKEN)
         logger(PATH_REPO, name, message, sender, sha, commit_url)
-        notify(data, "success", TOKEN)
+        return message + ' ' + str(code)
 
-        return "OK " + message + ' ' + str(code)
+    # Run module that tests.
+
+    message, code = test(PATH_REPO + '/' + name)
+
+    if code > 0 or code < 0: # Error occured!
+        # Set github status.
+        notify(data, "failure", TOKEN)
+        logger(PATH_REPO, name, message, sender, sha, commit_url)
+        return message + ' ' + str(code)
+
+    print("test")
+    logger(PATH_REPO, name, message, sender, sha, commit_url)
+    notify(data, "success", TOKEN)
+
+    return "OK " + message + ' ' + str(code)
 
 
 # Start the Flask web server.
